@@ -25,7 +25,6 @@ hideEl(document.querySelector('.comments'));
 hideEl(document.querySelector('.draw'));
 hideEl(document.querySelector('.share'));
 
-
 function hideEl(el) {
 	el.style.display = 'none';
 }
@@ -72,7 +71,50 @@ function showTools() {
 	showEl(document.querySelector('.tool'));
 }
 
+// Перемещение меню
+let movedPiece = null;
+let minY, minX, maxX, maxY;
+let shiftX = 0;
+let shiftY = 0;
 
+document.addEventListener('mousedown', dragStart);
+document.addEventListener('mousemove', dragMenu);
+document.addEventListener('mouseup', dropMenu);
+document.addEventListener('touchstart', event => dragStart(event.changedTouches[0]));
+document.addEventListener('touchmove', event => dragMenu(event.changedTouches[0].pageX, event.changedTouches[0].pageY));
+document.addEventListener('touchend', event => dropMenu(event.changedTouches[0]));
+
+function dragStart(event) {
+	if (event.target.classList.contains('drag')) { 
+	movedPiece = event.target.parentElement;
+	minX = wrap.offsetLeft;
+	minY = wrap.offsetTop;
+	maxX = wrap.offsetLeft + wrap.offsetWidth - movedPiece.offsetWidth;
+	maxY = wrap.offsetTop + wrap.offsetHeight - movedPiece.offsetHeight;
+	shiftX = event.pageX - event.target.getBoundingClientRect().left - window.pageXOffset;
+	shiftY = event.pageY - event.target.getBoundingClientRect().top - window.pageYOffset;
+	}
+}
+
+function dragMenu(event) {
+	if (movedPiece) {
+	event.preventDefault();
+	let x = event.pageX - shiftX;
+	let y = event.pageY - shiftY;
+	x = Math.min(x, maxX);
+	y = Math.min(y, maxY);
+	x = Math.max(x, minX);
+	y = Math.max(y, minY);
+	movedPiece.style.left = x + 'px';
+	movedPiece.style.top = y + 'px';
+	}
+}
+
+function dropMenu(evet) {
+	if (movedPiece) {
+		movedPiece = null;
+	}
+}
 
 //загрузка картинки
 menu.querySelector('.new').addEventListener('change', loadImg);
