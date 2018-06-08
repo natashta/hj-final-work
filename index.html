@@ -17,8 +17,11 @@
         </li>
 
         <li class="menu__item mode new">
-          <i class="menu__icon new-icon"></i>
-          <span class="menu__item-title">Загрузить<br>новое</span>
+          <label for="addImg">
+            <i class="menu__icon new-icon"></i>
+            <span class="menu__item-title">Загрузить<br>новое</span>
+            <input type="file" id="addImg" style="display:none" accept="image/*">
+          </label>
         </li>
 
         <li class="menu__item mode comments" data-state="">
@@ -102,7 +105,7 @@
           <input class="comments__submit" type="submit" value="Отправить">
         </div>
       </form>
-
+     <canvas id="canvas"></canvas>
     </div>
   </body>
 
