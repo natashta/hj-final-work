@@ -39,7 +39,9 @@ burger.addEventListener('click', () => {
 	showEl(document.querySelector('.comments'));
 	showEl(document.querySelector('.draw'));
 	showEl(document.querySelector('.share'));
-	//hideEl(burger);
+	document.querySelector('.menu').dataset.state = 'default';
+	document.querySelector('.menu__item').dataset.state = 'default';
+	document.querySelector('.menu__item.tool').dataset.state = 'defaul';
 });
 
 document.querySelector('.comments').addEventListener('click', ()=> {
