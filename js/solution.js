@@ -110,7 +110,7 @@ function dragMenu(event) {
 	}
 }
 
-function dropMenu(evet) {
+function dropMenu(event) {
 	if (movedPiece) {
 		movedPiece = null;
 	}
