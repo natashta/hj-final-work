@@ -120,8 +120,8 @@ function dropMenu(event) {
 
 //загрузка картинки
 menu.querySelector('.new').addEventListener('change', loadImg);
-menu.addEventListener('drop', dropImg); 
-menu.addEventListener('dragover', event => event.preventDefault()); 
+wrap.addEventListener('drop', dropImg); 
+wrap.addEventListener('dragover', event => event.preventDefault()); 
 
 function loadImg(event) {
 	const files = Array.from(event.target.files);
@@ -130,22 +130,20 @@ function loadImg(event) {
 
 function dropImg(event) {
 	event.preventDefault();
-	const files = Array.from(event.target.files);
-	files.forEach(file => {
-	if ((file.type === 'image/jpeg') || (file.type === 'image/png')) {
-			sendFile(files);
-		} else {
-			showEl(error);
-		}
-});
+	const files = Array.from(event.dataTransfer.files);
+	sendFile(files);
 }
 
 function sendFile(files) {
 const formData = new FormData();
 	
 files.forEach(file => {
-	formData.append('image', file);
-	canvas.style.backgroundImage=`url(${URL.createObjectURL(file)})`;
+	if ((file.type === 'image/jpeg') || (file.type === 'image/png')) {
+		formData.append('image', file);
+		canvas.style.backgroundImage=`url(${URL.createObjectURL(file)})`;
+	} else {
+		showEl(error);	
+	}
 });
 
 const xhr = new XMLHttpRequest();
