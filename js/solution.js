@@ -34,15 +34,19 @@ function showEl(el) {
 }
 
 //меню
-burger.addEventListener('click', () => {
-	showEl(document.querySelector('.new'));
-	showEl(document.querySelector('.comments'));
-	showEl(document.querySelector('.draw'));
-	showEl(document.querySelector('.share'));
-	document.querySelector('.menu').dataset.state = 'default';
-	document.querySelector('.menu__item').dataset.state = 'default';
-	document.querySelector('.menu__item.tool').dataset.state = 'defaul';
-});
+burger.addEventListener('click', burgerWrap)
+
+function burgerWrap() {
+	menu.dataset.state = 'default';
+	menu.querySelector('.menu__item').dataset.state = 'default';
+
+	Array.from(menu.querySelectorAll('.mode')).forEach(modeItem => {
+		modeItem.dataset.state = '';
+		showEl(modeItem);
+	})
+	
+	Array.from(document.querySelectorAll('.tool')).forEach(toolItem => toolItem.dataset.state = '');
+}
 
 document.querySelector('.comments').addEventListener('click', ()=> {
 	hideEl(document.querySelector('.new'));
@@ -186,7 +190,7 @@ function setcurrentImage(fileInfo) {
 let curves = [];
 let drawing = false;
 let needsRepaint = false;
-let brush_radius = 5;
+let brush_radius = 4;
 
 //очистка холста
 function clearPaint(e) {
