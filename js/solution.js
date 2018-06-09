@@ -142,7 +142,10 @@ const formData = new FormData();
 files.forEach(file => {
 	if ((file.type === 'image/jpeg') || (file.type === 'image/png')) {
 		formData.append('image', file);
-		canvas.style.backgroundImage=`url(${URL.createObjectURL(file)})`;
+		//canvas.style.backgroundImage=`url(${URL.createObjectURL(file)})`;
+		currentImg.src = URL.createObjectURL(file);
+		currentImg.addEventListener('load', event => {
+		URL.revokeObjectURL(event.target.src);
 	} else {
 		showEl(error);	
 	}
