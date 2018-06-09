@@ -124,11 +124,13 @@ wrap.addEventListener('drop', dropImg);
 wrap.addEventListener('dragover', event => event.preventDefault()); 
 
 function loadImg(event) {
+	hideEl(error);
 	const files = Array.from(event.target.files);
 	sendFile(files);
 	}
 
 function dropImg(event) {
+	hideEl(error);
 	event.preventDefault();
 	const files = Array.from(event.dataTransfer.files);
 	sendFile(files);
