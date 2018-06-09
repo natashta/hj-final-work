@@ -17,7 +17,7 @@ const commOn = document.querySelector('#comments-on'),
 	socketUrl = 'wss://neto-api.herokuapp.com/pic/';
 
 
-//Убираем все лишнее
+//Состояние Публикация
 currentImg.src = '';
 wrap.removeChild(document.querySelector('.comments__form')); 
 //hideEl(burger);
@@ -133,6 +133,12 @@ function dropImg(event) {
 	hideEl(error);
 	event.preventDefault();
 	const files = Array.from(event.dataTransfer.files);
+	if (currentImg.dataset.state === 'load') {
+		console.log('nope!')
+		showEl(error);
+		error.lastElementChild.textContent = 'Чтобы загрузить новое изображение, пожалуйста, воспользуйтесь пунктом "Загрузить новое" в меню';
+		return;
+	}
 	sendFile(files);
 }
 
@@ -142,6 +148,7 @@ const formData = new FormData();
 files.forEach(file => {
 	if ((file.type === 'image/jpeg') || (file.type === 'image/png')) {
 		formData.append('image', file);
+		formData.append('load', 'load');
 		//canvas.style.backgroundImage=`url(${URL.createObjectURL(file)})`;
 		currentImg.src = URL.createObjectURL(file);
 		currentImg.addEventListener('load', event => {
