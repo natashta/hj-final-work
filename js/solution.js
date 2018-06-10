@@ -44,10 +44,24 @@ function burgerWrap() {
 		modeItem.dataset.state = '';
 		showEl(modeItem);
 	})
-	
 	Array.from(document.querySelectorAll('.tool')).forEach(toolItem => toolItem.dataset.state = '');
 }
 
+//переключение меню
+showMenu()
+function showMenu() {
+	Array.from(document.querySelectorAll('.mode')).forEach(modeItem => {
+		modeItem.dataset.state = '';
+		modeItem.addEventListener('click', () => {
+				menu.dataset.state = 'selected';
+				modeItem.dataset.state = 'selected';
+				//menu.querySelector('.tool').dataset.state = 'selected';
+				//showEl(menu.querySelector('.tool'));
+		})
+	})
+}
+
+/*
 document.querySelector('.comments').addEventListener('click', ()=> {
 	hideEl(document.querySelector('.new'));
 	hideEl(document.querySelector('.draw'));
@@ -76,6 +90,7 @@ function showTools() {
 	document.querySelector('.menu__item.tool').dataset.state = 'selected';
 	showEl(document.querySelector('.tool'));
 }
+*/
 
 // Перемещение меню
 let movedPiece = null;
