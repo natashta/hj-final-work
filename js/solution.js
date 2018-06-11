@@ -200,12 +200,23 @@ function setcurrentImage(fileInfo) {
 	currentImg.src = fileInfo.url;
 }
 
+//выбор цвета для рисования
+let currColor;
+Array.from(menu.querySelectorAll('.menu__color')).forEach(color => {
+	 	color.addEventListener('click', () => {
+		currColor = document.querySelector('.draw-tools input[type="radio"]:checked').value; 
+		console.log(currColor);
+		return currColor;
+	});	
+});
+
 //рисование
-//Создаем холст для рисования	
+//Создаем холст 	
 let curves = [];
 let drawing = false;
-let needsRepaint = false;
+let repaint = false;
 let brush_radius = 4;
+let color = currColor;
 
 //очистка холста
 function clearPaint(e) {
@@ -216,10 +227,63 @@ function clearPaint(e) {
 canvas.width = screen.width;
 canvas.height = screen.height;
 ctx.clearRect(0, 0, canvas.width, canvas.height); 
+canvas.style.zIndex = '1';
 
+canvas.addEventListener('dblclick', () => {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+  	curves = [];
+  	repaint = true;
+})
+canvas.addEventListener('mouseup', () => {
+  drawing = false;
+})
+canvas.addEventListener('mouseleave', () => {
+  drawing = false;
+})
+
+canvas.addEventListener('mousedown', e => {
+  curves.push([e.offsetX, e.offsetY]);
+  drawing = true;
+  ctx.beginPath();
+  ctx.fillStyle = color;
+  ctx.arc(e.offsetX, e.offsetY, brush_radius/2, 0, 2 * Math.PI);
+  ctx.fill();
+});
+
+canvas.addEventListener('mousemove', e => { 
+  if (!drawing) return;
+  curves.push([e.offsetX, e.offsetY])
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = brush_radius;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.moveTo(curves[curves.length-2][0],curves[curves.length-2][1]);
+  ctx.lineTo(curves[curves.length-1][0],curves[curves.length-1][1])
+  ctx.stroke();
+});
+
+//ресайз холста
 window.addEventListener('resize', function(e) {
 	canvas.width = screen.width;
 	canvas.height = screen.height;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);   
 	curves = []; 
+})
+
+function tick () {
+  if (repaint) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    repaint = false;
+  }
+  window.requestAnimationFrame(tick);
+}
+
+//посылаем данные рисования на сервер
+const ws = new WebSocket(socketUrl);
+
+canvas.addEventListener('update', e => {
+  e.canvas.toBlob(function (blob) {
+       ws.send(blob);
+  });
 });
