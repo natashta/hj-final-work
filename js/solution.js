@@ -220,10 +220,12 @@ if (currentImg.dataset.state === 'load') {
 
 //Логика: после загрузки картинки клик в любом месте холста(картинки) 
 //открывает функцию комментирования либо функцию рисования в зависимости от открытого пункта меню
-//эта штука не дает кликнуть на меню
-/*wrap.addEventListener('click', (event) => {
+canvas.addEventListener('click', (event) => {
 	event.preventDefault();
-})*/
+	if ((menu.querySelector('.comments').dataset.state === 'selected')|| commOn.checked) {
+	console.log('comments on');
+	}
+})
 
 //Убираем комментарии
 function removeComments() {
@@ -297,7 +299,8 @@ canvas.addEventListener('mouseleave', () => {
 
 
 canvas.addEventListener('mousedown', e => {
-	e.preventDefault();
+  e.preventDefault();
+	if (menu.querySelector('.draw').dataset.state === 'selected') {
   curves.push([e.offsetX, e.offsetY]);
   drawing = true;
   ctx.beginPath();
@@ -305,6 +308,7 @@ canvas.addEventListener('mousedown', e => {
   ctx.arc(e.offsetX, e.offsetY, brush_radius/2, 0, 2 * Math.PI);
   ctx.fill();
   console.log(color);
+}
 });
 
 canvas.addEventListener('mousemove', e => { 
