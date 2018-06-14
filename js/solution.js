@@ -215,17 +215,33 @@ if (currentImg.dataset.state === 'load') {
 	document.querySelector('.menu__item.tool.share-tools').dataset.state = 'selected';
 	document.querySelector('.menu').dataset.state = 'selected';
 	document.querySelector('.menu__item').dataset.state = 'selected';
+	createMask(); //эта функция, возможно, должна вызываться не здесь, а при получении даннных с локал сторадж (для других пользователей)
 }
 }
 
-//Логика: после загрузки картинки клик в любом месте холста(картинки) 
-//открывает функцию комментирования либо функцию рисования в зависимости от открытого пункта меню
-canvas.addEventListener('click', (event) => {
+function createMask() {
+	//сделать размеры маски по размеру картинки
+	//const width = getComputedStyle(wrap.querySelector('.current-image')).width;
+	//const height = getComputedStyle(wrap.querySelector('.current-image')).height;
+	const mask = document.createElement('div');
+	mask.style.width = '100%';
+	mask.style.height = '100%';
+	mask.style.position = 'absolute';
+	mask.style.top = '0';
+	mask.style.left = '0';
+	mask.style.display = 'block';
+	mask.style.zIndex = '2';
+	wrap.appendChild(mask);
+	console.log(mask);
+
+//Клик на экране - комменты
+	mask.addEventListener('click', (event) => {
 	event.preventDefault();
 	if ((menu.querySelector('.comments').dataset.state === 'selected')|| commOn.checked) {
 	console.log('comments on');
-	}
+	} 
 })
+}
 
 //Убираем комментарии
 function removeComments() {
@@ -250,8 +266,6 @@ function commentsOn() {
 		form.style.display = '';
 	})
 }
-
-//Клик на экране - комменты. Надо создать форму для комментов и при клике ее аппенд.
 
 
 //выбор цвета для рисования
