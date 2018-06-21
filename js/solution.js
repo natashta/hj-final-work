@@ -395,18 +395,14 @@ function getTime(timestamp) {
 
 
 //выбор цвета для рисования
-
-Array.from(menu.querySelectorAll('.menu__color')).forEach(color => {
+ Array.from(menu.querySelectorAll('.menu__color')).forEach(color => {
 	 	color.addEventListener('change', () => {
 		currColor = document.querySelector('.draw-tools .menu__color:checked').value;
-		return currColor;
-
-	});
-	 	if (color.checked) {
-	 		console.log(currColor); 
-			return currColor;}
-	
-});
+		if (color.checked) {
+			console.log(currColor);
+			return currColor;
+	}
+	}
 
 
 //рисование
@@ -415,7 +411,6 @@ let curves = [];
 let drawing = false;
 let repaint = false;
 let brush_radius = 4;
-let color = currColor;
 
 //очистка холста
 function clearPaint(e) {
@@ -448,7 +443,7 @@ canvas.addEventListener('mousedown', e => {
   curves.push([e.offsetX, e.offsetY]);
   drawing = true;
   ctx.beginPath();
-  ctx.fillStyle = color;
+  ctx.fillStyle = currColor;
   ctx.arc(e.offsetX, e.offsetY, brush_radius/2, 0, 2 * Math.PI);
   ctx.fill();
   console.log(color);
@@ -459,7 +454,7 @@ canvas.addEventListener('mousemove', e => {
   if (!drawing) return;
   curves.push([e.offsetX, e.offsetY])
   ctx.beginPath();
-  ctx.strokeStyle = color;
+  ctx.strokeStyle = currColor;
   ctx.lineWidth = brush_radius;
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
