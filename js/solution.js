@@ -14,7 +14,7 @@ const formComments = document.querySelectorAll('.comments__form');
 	ctx = canvas.getContext('2d'),
 	imgInput = document.querySelector('#imgInput'),
 	serverUrl = 'https://neto-api.herokuapp.com/pic',
-	socketUrl = `wss://neto-api.herokuapp.com/pic/`;
+	socketUrl = 'wss://neto-api.herokuapp.com/pic/';
 
 	const ws = new WebSocket(socketUrl);
 	let currColor;
@@ -53,7 +53,6 @@ function burgerWrap() {
 	Array.from(document.querySelectorAll('.tool')).forEach(toolItem => toolItem.dataset.state = '');
 }
 
-//Переключатели
 //Меню в режиме рецензирования
 showMenu()
 function showMenu() {
@@ -85,7 +84,7 @@ document.addEventListener('touchmove', event => dragMenu(event.changedTouches[0]
 document.addEventListener('touchend', event => dropMenu(event.changedTouches[0]));
 
 function dragStart(event) {
-	if (event.target.classList.contains('drag')) { 
+	if (!event.target.classList.contains('drag')) {return;}
 	movedPiece = event.target.parentElement;
 	minX = wrap.offsetLeft;
 	minY = wrap.offsetTop;
@@ -94,9 +93,9 @@ function dragStart(event) {
 	shiftX = event.pageX - event.target.getBoundingClientRect().left - window.pageXOffset;
 	shiftY = event.pageY - event.target.getBoundingClientRect().top - window.pageYOffset;
 }
-}
 
 function dragMenu(event) {
+	if (!event.target.classList.contains('drag')) {return;}
 	if (movedPiece) {
 	event.preventDefault();
 	let x = event.pageX - shiftX;
@@ -108,6 +107,7 @@ function dragMenu(event) {
 	movedPiece.style.left = x + 'px';
 	movedPiece.style.top = y + 'px';
 }
+else return;
 }
 
 function dropMenu(event) {
@@ -124,7 +124,6 @@ wrap.addEventListener('dragover', event => event.preventDefault());
 function loadImg(event) {
 	hideEl(error);
 	const files = Array.from(event.target.files);
-
 	sendFile(files);
 	}
 
@@ -181,6 +180,7 @@ fetch(serverUrl, {
 		});
 }
 
+
 function onLoadImg() {
 if (currentImg.dataset.state === 'load') {
 	hideEl(document.querySelector('.new'));
@@ -191,8 +191,9 @@ if (currentImg.dataset.state === 'load') {
 	document.querySelector('.menu__item').dataset.state = 'selected';
 	document.querySelector('.menu__url').value = fileInfo.url;
 	console.log(fileInfo.id);
-	//createMask(); //эта функция, возможно, должна вызываться не здесь, а при получении даннных с локал сторадж (для других пользователей)
 	hideEl(error);
+	removeComments(); 
+	curves = []; 
 }
 }
 
@@ -222,7 +223,7 @@ function getInfo(id) {
 
 }
 
-/*function createMask(event) {
+function createMask(event) {
 	//сделать размеры маски по размеру картинки
 	//const width = getComputedStyle(wrap.querySelector('.current-image')).width;
 	//const height = getComputedStyle(wrap.querySelector('.current-image')).height;
@@ -233,20 +234,28 @@ function getInfo(id) {
 	mask.style.top = '0';
 	mask.style.left = '0';
 	mask.style.display = 'block';
-	mask.style.zIndex = '1';
+	mask.style.zIndex = '3';
+	mask.className = 'mask';
 	wrap.appendChild(mask);
-	//console.log(mask);*/
+	console.log(mask);
+}
 	
 //Клик на экране - комменты
 
+/*
 	canvas.addEventListener('click', (event) => {
 	event.preventDefault();
 	if ((menu.querySelector('.comments').dataset.state === 'selected')&& commOn.checked) {
-		showComments();
+		wrap.dataset.state = 'comments';
+		createMask(); 
+		document.createElement('div').appendChild(createCommentForm(event.offsetX, event.offsetY));
+		//showComments();
 	}
+	else return;
 });
-
-let list = {};
+*/
+	
+/*
 function showComments(list) {
   const comments = list.map(createComment);
   const fragment = list.reduce((frag, elem) => {
@@ -297,16 +306,20 @@ function createComment(comment) {
         ])
       ])
     ])
-  ]);*/
-}
+  ]);
+}*/
 
-	
-/*
-	const formComment = document.createElement('form')
+
+function createCommentForm(event){
+	let formComment = document.createElement('form')
 	formComment.classList.add('comments__form');
 	formComment.innerHTML = `
 		<span class="comments__marker"></span><input type="checkbox" class="comments__marker-checkbox">
 		<div class="comments__body">
+		<div class="comment">
+            <p class="comment__time">28.02.18 19:09:33</p>
+            <p class="comment__message">Здесь будет комментарий</p>
+          </div>
 			<div class="comment">
 				<div class="loader">
 					<span></span>
@@ -323,34 +336,15 @@ function createComment(comment) {
 
 
     formComment.style.left = (event.pageX - 5) + "px";
-    formComment.top = (event.pageY - 5) + "px";
+    formComment.style.top = (event.pageY - 5) + "px";
+    formComment.style.zIndex = '3';
 	canvas.appendChild(formComment);
 	console.log('comment');
+}
 
-	//hideEl(formComment.querySelector('.image-loader'));
+canvas.addEventListener('click', createCommentForm);
 
-	//кнопка "закрыть"
-	formComment.querySelector('.comments__close').addEventListener('click', () => {
-		formComment.querySelector('.comments__marker-checkbox').checked = false;
-	});
 
-	// кнопка "отправить"
-	//formComment.addEventListener('click', messageSend);
-	} 
-		
-});
-*/
-/*
-const newForm = createElement(formStruct);
-
-	divComments.appendChild(newForm);
-	// навешиваем обработчик на кнопку «Добавить» в только что добавленной форме
-	newForm.querySelector('.submit-comment').addEventListener('click', submitFormComment);
-
-	// и на кнопку «Закрыть»
-	newForm.querySelector('.close-comment').addEventListener('click', closeFormComment);
-
-*/
 //Убираем комментарии
 function removeComments() {
 	//const formComments = wrap.querySelectorAll('.comments__form');
@@ -397,12 +391,16 @@ function getTime(timestamp) {
 //выбор цвета для рисования
  Array.from(menu.querySelectorAll('.menu__color')).forEach(color => {
 	 	color.addEventListener('change', () => {
+	 	wrap.dataset.state = 'drawing';
+	 	if (document.querySelector('.mask')) {
+	 		hideEl(document.querySelector('.mask'));
+	 	}
 		currColor = document.querySelector('.draw-tools .menu__color:checked').value;
 		if (color.checked) {
-			console.log(currColor);
 			return currColor;
 	}
-	}
+	});	
+});
 
 
 //рисование
