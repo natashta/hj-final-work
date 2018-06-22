@@ -128,8 +128,9 @@ function loadImg(event) {
 	}
 
 function dropImg(event) {
-	hideEl(error);
+	if ((wrap.dataset.state === 'drawing') || (wrap.dataset.state === 'comments')) {return};
 	event.preventDefault();
+	hideEl(error);
 	const files = Array.from(event.dataTransfer.files);
 
 	if (currentImg.dataset.state === 'load') {
@@ -193,7 +194,7 @@ if (currentImg.dataset.state === 'load') {
 	console.log(fileInfo.id);
 	hideEl(error);
 	removeComments(); 
-	curves = []; 
+	clearPaint();
 }
 }
 
@@ -384,7 +385,7 @@ function getTime(timestamp) {
   let h = ('0' + time.getHours()).slice(-2);
   let m = ('0' + time.getMinutes()).slice(-2);
   	console.log(`${h}:${m}`);
-    return `${h}:${m}`;
+    	return `${h}:${m}`;
 }
 
 
@@ -423,8 +424,7 @@ ctx.clearRect(0, 0, canvas.width, canvas.height);
 canvas.style.zIndex = '1';
 
 canvas.addEventListener('dblclick', () => {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-  	curves = [];
+	clearPaint();
   	repaint = true;
 })
 canvas.addEventListener('mouseup', () => {
