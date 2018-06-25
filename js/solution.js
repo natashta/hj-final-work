@@ -16,7 +16,7 @@ const formComments = document.querySelectorAll('.comments__form');
 	serverUrl = 'https://neto-api.herokuapp.com/pic',
 	socketUrl = 'wss://neto-api.herokuapp.com/pic/';
 
-	const ws = new WebSocket(socketUrl);
+	let ws;
 	let currColor;
 	let fileInfo;
 
@@ -172,7 +172,11 @@ fetch(serverUrl, {
 		})
 		.then(res => res.json())
 		.then(res => {
-			fileInfo = res;
+			var id = res.id;
+			var url = res.url;
+			localStorage.setItem('fileId', id);
+			localStorage.setItem('fileUrl', url);
+			//getInfo(res.id);
 			onLoadImg()
 		})
 		.catch(er => {
@@ -184,17 +188,20 @@ fetch(serverUrl, {
 
 function onLoadImg() {
 if (currentImg.dataset.state === 'load') {
+	var id = localStorage.getItem('fileId');
+	var url = localStorage.getItem('fileUrl');
 	hideEl(document.querySelector('.new'));
 	hideEl(document.querySelector('.draw'));
 	hideEl(document.querySelector('.comments'));
 	document.querySelector('.menu__item.tool.share-tools').dataset.state = 'selected';
 	document.querySelector('.menu').dataset.state = 'selected';
 	document.querySelector('.menu__item').dataset.state = 'selected';
-	document.querySelector('.menu__url').value = fileInfo.url;
-	console.log(fileInfo.id);
+	document.querySelector('.menu__url').value = url;
 	hideEl(error);
 	removeComments(); 
 	clearPaint();
+	openWs();
+}
 }
 }
 
@@ -293,21 +300,27 @@ function el(tagName, attributes, children) {
 
 function createComment(comment) {
    console.log(comment.text);
-  /*return el('div', { class: 'comment-wrap' }, [
-    el('div', { class: 'photo', title: comment.author.name }, [
-      el('div', { class: 'avatar', style: `background-image: url('${comment.author.pic}')` }, '')
+
+  /*return (el('span', {comments__marker}),
+	el ('input', { 'class': 'comments__marker-checkbox','type': 'checkbox'});
+  	el('div', { class: 'comments__body' }, [
+    	el('div', { class: 'comment'}, [
+    		el('p', { class: 'comment__time'}, new Date(comment.date).toLocaleString('ru-Ru')),
+    		el('p', { class: 'comment__message'}, )
     ]),
-    el('div', { class: 'comment-block' }, [
-      el('p', { class: 'comment-text' }, comment.text),
-      el('div', { class: 'bottom-comment' }, [
-        el('div', { class: 'comment-date' }, new Date(comment.date).toLocaleString('ru-Ru')),
-        el('ul', { class: 'comment-actions' }, [
-          el('li', { class: 'complain' }, 'Пожаловаться'),
-          el('li', { class: 'reply' }, 'Ответить')
-        ])
-      ])
+    el('div', { class: 'comment'}, [
+		el('div', { class: 'loader'}, [
+			el('span'),
+			el('span'),
+			el('span'),
+			el('span'),
+		])
     ])
+    el('textarea', { 'class': 'comments__input', 'type': 'text'}),
+	el('input', { 'class': 'close-comment', 'type': 'button'}, 'Закрыть'), 
+	el('input', { 'class': 'submit-comment', 'type': 'submit'}, 'Отправить'),
   ]);
+  )
 }*/
 
 
@@ -370,7 +383,7 @@ function commentsOn() {
 	})
 }
 	 
-let timestamp = fileInfo.timestamp;
+/*let timestamp = fileInfo.timestamp;
 function getTime(timestamp) {
 	const options = {
 		day: '2-digit',
@@ -387,7 +400,26 @@ function getTime(timestamp) {
   	console.log(`${h}:${m}`);
     	return `${h}:${m}`;
 }
+*/
 
+// веб сокет
+function openWs() {
+	var id = localStorage.getItem('fileId');
+	ws = new WebSocket(`${socketUrl}${id}`);
+	ws.addEventListener('message', event => {
+		if (JSON.parse(event.data).event === 'pic'){
+			console.log('pic');
+		}
+
+		if (JSON.parse(event.data).event === 'comment'){
+			console.log('comm');		
+		}
+
+		if (JSON.parse(event.data).event === 'mask'){
+			console.log('mask');
+		}
+	});
+}
 
 //выбор цвета для рисования
  Array.from(menu.querySelectorAll('.menu__color')).forEach(color => {
@@ -478,6 +510,8 @@ function tick () {
 }
 
 //посылаем данные рисования на сервер
+var id = localStorage.getItem('fileId');
+ws = new WebSocket(`${socketUrl}${id}`);
 canvas.addEventListener('update', e => {
   e.canvas.toBlob(function (blob) {
        ws.send(blob);
