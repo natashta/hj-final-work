@@ -348,10 +348,11 @@ function createCommentForm(event){
 			<input class="comments__submit" type="submit" value="Отправить">
 		</div>`;
 
-
-    formComment.style.left = (event.pageX - 5) + "px";
-    formComment.style.top = (event.pageY - 5) + "px";
-    formComment.style.zIndex = '3';
+	formComment.style.left = (event.pageX - 5) + "px";
+	formComment.style.top = (event.pageY - 5) + "px";
+	formComment.style.display = 'block';
+	formComment.style.position = 'absolute';
+	formComment.style.zIndex = '3';
 	canvas.appendChild(formComment);
 	console.log('comment');
 }
@@ -450,6 +451,10 @@ function clearPaint(e) {
 canvas.width = screen.width;
 canvas.height = screen.height;
 ctx.clearRect(0, 0, canvas.width, canvas.height); 
+canvas.style.top = '0';
+canvas.style.left = '0';
+canvas.style.display = 'block';
+canvas.style.position = 'absolute';
 canvas.style.zIndex = '1';
 
 canvas.addEventListener('dblclick', () => {
