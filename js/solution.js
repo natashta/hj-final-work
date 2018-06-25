@@ -299,14 +299,15 @@ function el(tagName, attributes, children) {
 }
 
 function createComment(comment) {
-   console.log(comment.text);
+	console.log(comment.text);
 
-  /*return (el('span', {comments__marker}),
-	el ('input', { 'class': 'comments__marker-checkbox','type': 'checkbox'});
+	return el('span', {class: 'comments__marker'}),
+	el ('input', { class: 'comments__marker-checkbox',type: 'checkbox'});
   	el('div', { class: 'comments__body' }, [
     	el('div', { class: 'comment'}, [
     		el('p', { class: 'comment__time'}, new Date(comment.date).toLocaleString('ru-Ru')),
     		el('p', { class: 'comment__message'}, )
+    ]),
     ]),
     el('div', { class: 'comment'}, [
 		el('div', { class: 'loader'}, [
@@ -316,13 +317,11 @@ function createComment(comment) {
 			el('span'),
 		])
     ])
-    el('textarea', { 'class': 'comments__input', 'type': 'text'}),
-	el('input', { 'class': 'close-comment', 'type': 'button'}, 'Закрыть'), 
-	el('input', { 'class': 'submit-comment', 'type': 'submit'}, 'Отправить'),
-  ]);
-  )
-}*/
-
+    el('textarea', { class: 'comments__input', type: 'text'}),
+	el('input', { class: 'close-comment', type: 'button'}, 'Закрыть'), 
+	el('input', { class: 'submit-comment', type: 'submit'}, 'Отправить');
+}
+*/
 
 function createCommentForm(event){
 	let formComment = document.createElement('form')
