@@ -361,7 +361,6 @@ canvas.addEventListener('click', createCommentForm);
 
 //Убираем комментарии
 function removeComments() {
-	//const formComments = wrap.querySelectorAll('.comments__form');
 	Array.from(formComments).forEach(form => {form.remove()});
 }
 
@@ -370,14 +369,12 @@ commOn.addEventListener('click', commentsOn);
 commOff.addEventListener('click', commentsOff);
 
 function commentsOff() {
-	//const forms = document.querySelectorAll('.comments__form');
 	Array.from(formComments).forEach(form => {
 		form.style.display = 'none';
 	 })
 }
 
 function commentsOn() {
-	//const forms = document.querySelectorAll('.comments__form');
 	Array.from(formComments).forEach(form => {
 		form.style.display = '';
 	})
