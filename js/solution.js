@@ -368,7 +368,7 @@ function createCommentForm(event){
 			<input class="comments__close" type="button" value="Закрыть">
 			<input class="comments__submit" type="submit" value="Отправить">
 		</div>`;
-    	formComment.style.left = (event.pageX - 5) + "px";
+    	formComment.style.left = (event.pageX) + "px";
     	formComment.style.top = (event.pageY) + "px";
     	formComment.style.zIndex = '3';
     	formComment.style.display = 'block';
