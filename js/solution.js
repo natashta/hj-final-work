@@ -123,6 +123,7 @@ wrap.addEventListener('dragover', event => event.preventDefault());
 
 function loadImg(event) {
 	hideEl(error);
+	showEl(loader);
 	const files = Array.from(event.target.files);
 	sendFile(files);
 	}
@@ -131,6 +132,7 @@ function dropImg(event) {
 	if ((wrap.dataset.state === 'drawing') || (wrap.dataset.state === 'comments')) {return};
 	event.preventDefault();
 	hideEl(error);
+	showEl(loader);
 	const files = Array.from(event.dataTransfer.files);
 
 	if (currentImg.dataset.state === 'load') {
@@ -198,6 +200,7 @@ if (currentImg.dataset.state === 'load') {
 	document.querySelector('.menu__item').dataset.state = 'selected';
 	document.querySelector('.menu__url').value = url;
 	hideEl(error);
+	hideEl(loader);
 	showEl(burger);
 	removeComments(); 
 	clearPaint();
@@ -365,18 +368,16 @@ function createCommentForm(event){
 			<input class="comments__close" type="button" value="Закрыть">
 			<input class="comments__submit" type="submit" value="Отправить">
 		</div>`;
-    formComment.style.left = (event.pageX - 5) + "px";
-    formComment.style.top = (event.pageY) + "px";
-    formComment.style.zIndex = '3';
-    formComment.style.display = 'block';
+    	formComment.style.left = (event.pageX - 5) + "px";
+    	formComment.style.top = (event.pageY) + "px";
+    	formComment.style.zIndex = '3';
+    	formComment.style.display = 'block';
 	formComment.style.position = 'absolute';
 
 	localStorage.setItem('top', (formComment.style.top).replace(/\D/g, ""));
 	localStorage.setItem('left', (formComment.style.left).replace(/\D/g, ""));
-	canvas.appendChild(formComment);
-	console.log('comment');
-
-	//hideEl(formComment.querySelector('.loader'));
+	//canvas.appendChild(formComment);
+	wrap.insertBefore(formComment, canvas);
 
 	//кнопка "закрыть"
 	formComment.querySelector('.comments__close').addEventListener('click', () => {
@@ -384,6 +385,7 @@ function createCommentForm(event){
 	});
 
 	// кнопка "отправить"
+	//отправляется криво, только после третьего нажатия энтера
 	formComment.querySelector('.comments__submit').addEventListener('click', sendMessage);
 	formComment.querySelector('.comments__input').addEventListener('keydown', (event) => {
 		if (event.keyCode === 13) {
@@ -397,6 +399,7 @@ canvas.addEventListener('click', createCommentForm);
 // Отправляем комментарий на сервер
 function sendMessage(event) {
 	event.preventDefault();
+	//showEl(formComment.querySelector('.loader'));
 	const message = formComment.querySelector('.comments__input').value;
 
 	const formData = new FormData();
@@ -429,7 +432,6 @@ function sendMessage(event) {
 				console.log(er);
 			});
 	}
-
 
 
 //Убираем комментарии
@@ -495,9 +497,6 @@ function openWs() {
  Array.from(menu.querySelectorAll('.menu__color')).forEach(color => {
 	 	color.addEventListener('change', () => {
 	 	wrap.dataset.state = 'drawing';
-	 	if (document.querySelector('.mask')) {
-	 		hideEl(document.querySelector('.mask'));
-	 	}
 		currColor = document.querySelector('.draw-tools .menu__color:checked').value;
 		if (color.checked) {
 			return currColor;
