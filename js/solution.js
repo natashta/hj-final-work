@@ -341,6 +341,8 @@ function createComment(comment) {
 */
 
 function createCommentForm(event){
+	event.preventDefault();
+	if (!(menu.querySelector('.comments').dataset.state === 'selected')|| !commOn.checked) { return;}
 	let formComment = document.createElement('form')
 	formComment.classList.add('comments__form');
 	formComment.innerHTML = `
@@ -382,7 +384,7 @@ function createCommentForm(event){
 	});
 
 	// кнопка "отправить"
-	formComment.querySelector('.submit-comment').addEventListener('click', sendMessage);
+	formComment.querySelector('.comments__submit').addEventListener('click', sendMessage);
 	formComment.querySelector('.comments__input').addEventListener('keydown', (event) => {
 		if (event.keyCode === 13) {
 			sendMessage();
