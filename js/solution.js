@@ -1,7 +1,6 @@
 'use strtict'
 
 const formComments = document.querySelectorAll('.comments__form');
-	//divComments = document.querySelector('.comments__body'),
 	commOn = document.querySelector('#comments-on'),
 	commOff = document.querySelector('#comments-off'),
 	wrap = document.querySelector('.wrap'),
@@ -12,7 +11,6 @@ const formComments = document.querySelectorAll('.comments__form');
 	loader = document.querySelector('.image-loader'),
 	canvas = document.querySelector('#canvas'),
 	ctx = canvas.getContext('2d'),
-	//imgInput = document.querySelector('#imgInput'),
 	serverUrl = 'https://neto-api.herokuapp.com/pic',
 	socketUrl = 'wss://neto-api.herokuapp.com/pic/';
 
@@ -38,7 +36,6 @@ function showEl(el) {
 
 burger.addEventListener('click', burgerWrap)
 
-
 function burgerWrap() {
 	menu.dataset.state = 'default';
 	menu.querySelector('.menu__item').dataset.state = 'default';
@@ -60,8 +57,6 @@ function showMenu() {
 		modeItem.addEventListener('click', () => {
 				menu.dataset.state = 'selected';
 				modeItem.dataset.state = 'selected';
-				//menu.querySelector('.tool').dataset.state = 'selected';
-				//showEl(menu.querySelector('.tool'));
 		})
 	})
 }
@@ -157,9 +152,9 @@ files.forEach(file => {
 });
 
 fetch(serverUrl, {
-			body: formData,
-			credentials: 'same-origin',
-			method: 'POST'
+		body: formData,
+		credentials: 'same-origin',
+		method: 'POST'
 		})
 		.then( res => {
 			if (res.status >= 200 && res.status < 300) {
@@ -199,7 +194,6 @@ if (currentImg.dataset.state === 'load') {
 	showEl(burger);
 	removeForms();
 	clearPaint();
-	//createMask();
 	openWs();
 }
 }
@@ -242,38 +236,11 @@ function getInfo(id) {
 canvas.addEventListener('click', () => {
 	if (menu.querySelector('.draw').dataset.state === 'selected') {
 		wrap.dataset.state = 'drawing';
-		/*if (document.querySelector('.mask')) {
-	 		hideEl(document.querySelector('.mask'));
-	 	}*/
 	}
 	else if ((menu.querySelector('.comments').dataset.state === 'selected')|| commOn.checked) {
 		wrap.dataset.state = 'comments';
-		/*if (document.querySelector('.mask')) {
-	 		document.querySelector('.mask').style.display = 'block';
-	 	}*/
-}
+	 }
 });
-
-/*
-function createMask(event) {
-	//сделать размеры маски по размеру картинки
-	//const width = getComputedStyle(wrap.querySelector('.current-image')).width;
-	//const height = getComputedStyle(wrap.querySelector('.current-image')).height;
-	const mask = document.createElement('div');
-	mask.style.width = '100%';
-	mask.style.height = '100%';
-	mask.style.position = 'absolute';
-	mask.style.top = '0';
-	mask.style.left = '0';
-	mask.style.display = 'block';
-	mask.style.zIndex = '3'; 
-	mask.className = 'mask';
-	wrap.appendChild(mask);
-	console.log(mask);
-
-	mask.addEventListener('click', (event) => {createCommentForm});
-}
-*/
 
 /*	
 //Клик на экране - комменты
@@ -458,6 +425,10 @@ function checkForm() {
 
 }
 
+function addComment() {
+
+}
+
 // надо скрыть остальные формы при клике на маркер
 wrap.addEventListener('click', switchForms)
 
@@ -469,17 +440,6 @@ function switchForms(event) {
 			form.querySelector('.comments__body').style.display = 'none';
 	});
 	event.target.closest('form.comments__form').querySelector('.comments__body').style.display = 'block';
-}
-
-//скрыть-открыть комментарии
-commOn.addEventListener('click', commentsOn);
-commOff.addEventListener('click', commentsOff);
-
-function commentsOff() {
-	const formComments = document.querySelectorAll('.comments__form');
-	Array.from(formComments).forEach(form => {
-		form.style.display = 'none';
-	 })
 }
 
 //скрыть-открыть комментарии
@@ -538,11 +498,6 @@ function openWs() {
 		}
 	});
 }
-
-function addComment() {
-
-}
-
 
 //выбор цвета для рисования
  Array.from(menu.querySelectorAll('.menu__color')).forEach(color => {
