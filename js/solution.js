@@ -197,11 +197,19 @@ if (currentImg.dataset.state === 'load') {
 	hideEl(error);
 	hideEl(loader);
 	showEl(burger);
-	commentsOff(); 
+	removeForms();
 	clearPaint();
 	//createMask();
 	openWs();
 }
+}
+
+// удаление комментов при загрузке нового изображения
+function removeForms() {
+	const formComments = document.querySelectorAll('.comments__form');
+	Array.from(formComments).forEach(form => {
+		form.remove()
+	});
 }
 
 //копируем урл картинки в буфер
