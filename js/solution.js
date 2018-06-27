@@ -411,9 +411,10 @@ function createCommentForm(event){
 canvas.addEventListener('click', createCommentForm);	
 
 
-// Отправляем комментарий на сервер. Еще не рабочая.
+// Отправляем комментарий на сервер. Не работает, все время network error
 function sendMessage(event) {
 	event.preventDefault();
+	formComment = document.querySelector('.comments__form');
 	formComment.querySelector('textarea').addEventListener('input', () => {
 		showEl(formComment.querySelector('.loader'));
 	});
