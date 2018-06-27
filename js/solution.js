@@ -340,11 +340,16 @@ function createComment(comment) {
 }
 */
 
-
 function createCommentForm(event){
 	event.preventDefault();
 	if (!(menu.querySelector('.comments').dataset.state === 'selected')|| !commOn.checked) { return;}
 	wrap.dataset.state = 'comments';
+	//показываем форму только последнего коммента
+	if(document.querySelector('.comments__form')) {
+		Array.from(document.querySelectorAll('.comments__form')).forEach(form => {
+			form.querySelector('.comments__body').style.display = 'none';
+			});
+	}
 	let formComment = document.createElement('form')
 	formComment.classList.add('comments__form');
 	formComment.innerHTML = `
@@ -368,7 +373,6 @@ function createCommentForm(event){
 			<input class="comments__submit" type="submit" value="Отправить">
 		</div>`;
 
-
     formComment.style.left = (event.pageX) + "px";
     formComment.style.top = (event.pageY) + "px";
     formComment.style.zIndex = '3';
@@ -378,7 +382,6 @@ function createCommentForm(event){
 
 	localStorage.setItem('top', (formComment.style.top).replace(/\D/g, ""));
 	localStorage.setItem('left', (formComment.style.left).replace(/\D/g, ""));
-	//canvas.appendChild(formComment);
 	wrap.insertBefore(formComment, canvas);
 
 	//кнопка "закрыть"
@@ -393,6 +396,7 @@ function createCommentForm(event){
 		if (event.keyCode === 13) {
 			sendMessage();
 		}
+	//здесь еще скрыть все previousElementSibling
 	});
 }
 
@@ -445,17 +449,29 @@ function checkForm() {
 
 }
 
-//Убираем комментарии 
 // надо скрыть остальные формы при клике на маркер
 wrap.addEventListener('click', switchForms)
 
 function switchForms(event) {
 	if (!event.target.classList.contains('comments__marker-checkbox')) return;
 	if (event.target.nextElementSibling.style.display === 'block') return;
-	console.log(event.target.parentNode.nextElementSibling);
-	event.target.nextElementSibling.style.display = 'block';
+
+	Array.from(document.querySelectorAll('.comments__form')).forEach(form => {
+			form.querySelector('.comments__body').style.display = 'none';
+	});
+	event.target.closest('form.comments__form').querySelector('.comments__body').style.display = 'block';
 }
 
+//скрыть-открыть комментарии
+commOn.addEventListener('click', commentsOn);
+commOff.addEventListener('click', commentsOff);
+
+function commentsOff() {
+	const formComments = document.querySelectorAll('.comments__form');
+	Array.from(formComments).forEach(form => {
+		form.style.display = 'none';
+	 })
+}
 
 //скрыть-открыть комментарии
 commOn.addEventListener('click', commentsOn);
@@ -474,8 +490,6 @@ function commentsOn() {
 		form.style.display = '';
 	})
 }
-
-//если маркер кликнут, то форме добавтьб класс. Этот класс дисплей - блок.
 
 /*	 
 let timestamp = fileInfo.timestamp;
@@ -611,13 +625,16 @@ function tick () {
   }
   window.requestAnimationFrame(tick);
 }
+setInterval(tick, 1000);
 
 //посылаем данные рисования на сервер
 var id = localStorage.getItem('fileId');
 ws = new WebSocket(`${socketUrl}${id}`);
+
 canvas.addEventListener('update', e => {
   e.canvas.toBlob(function (blob) {
        ws.send(blob);
+       console.log('paint send');
   });
 });
 
