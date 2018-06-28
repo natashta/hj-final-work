@@ -177,6 +177,21 @@ fetch(serverUrl, {
 		});
 }
 
+// Получаем информацию о файле
+var id = localStorage.getItem('fileId');
+function getInfo(id) {
+	const xhrGet = new XMLHttpRequest();
+	xhrGet.open(
+		'GET',
+		`${serverUrl}/${id}`,
+		false
+	);
+	xhrGet.send();
+
+	getData = JSON.parse(xhrGet.responseText);
+	console.log(xhrGet.responseText);
+	//getNewComments(dataGet.comments);
+}
 
 function onLoadImg() {
 if (currentImg.dataset.state === 'load') {
@@ -377,7 +392,7 @@ function createCommentForm(event){
 canvas.addEventListener('click', createCommentForm);	
 
 
-// Отправляем комментарий на сервер. Не работает, все время network error
+// Отправляем комментарий на сервер.
 function sendMessage(event) {
 	event.preventDefault();
 	formComment = document.querySelector('.comments__form');
@@ -394,7 +409,7 @@ function sendMessage(event) {
 
 	var id = localStorage.getItem('fileId');
 
-		fetch(`${socketUrl}${id}/comments`, {
+		fetch(`${serverUrl}${id}/comments`, {
 				method: 'POST',
 				body: formData,
 				headers: {
@@ -606,7 +621,9 @@ function tick () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     repaint = false;
   }
-  window.requestAnimationFrame(tick);
+  setTimeout(function() {  
+    window.requestAnimationFrame(tick);
+  }, 1000);
 }
 
 //посылаем данные рисования на сервер
@@ -622,6 +639,7 @@ canvas.addEventListener('update', e => {
 
 window.addEventListener('beforeunload', () => { 
 	ws.close(); 
+	localStorage.clear();
 	console.log('Веб-сокет закрыт')
 	}); 
 
