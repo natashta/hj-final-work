@@ -371,7 +371,6 @@ function createCommentForm(event){
 		if (event.keyCode === 13) {
 			sendMessage();
 		}
-	//здесь еще скрыть все previousElementSibling
 	});
 }
 
@@ -419,7 +418,28 @@ function sendMessage(event) {
 			});
 	}
 
-//добавляем полученные комментарии в форму. Событие comment - получаем json с текстом и координатами.
+//Добавление нашего комментария в форму
+function addComment(message, form) {
+	let loaderDiv = form.querySelector('.loader').parentElement;
+
+	const newMessageDiv = document.createElement('div');
+	newMessageDiv.classList.add('comment');
+	newMessageDiv.dataset.timestamp = message.timestamp;
+		
+	const time = document.createElement('p');
+	time.classList.add('comment__time');
+	time.textContent = getDate(message.timestamp);
+	newMessageDiv.appendChild(time);
+
+	const commentMessage = document.createElement('p');
+	commentMessage.classList.add('comment__message');
+	commentMessage.textContent = message.message;
+	newMessageDiv.appendChild(commentMessage);
+
+	form.querySelector('.comments__body').insertBefore(newMessageDiv, loaderDiv);
+}
+
+//добавление полученного комментария
 //Надо проверить, есть ли форма с такими координатами. Если есть, вставить туда текст, если нет - создать форму и вставить текст
 function checkForm() {
 
@@ -460,8 +480,6 @@ function commentsOn() {
 	})
 }
 
-/*	 
-let timestamp = fileInfo.timestamp;
 function getDate(timestamp) {
 	const options = {
 		day: '2-digit',
@@ -474,7 +492,7 @@ function getDate(timestamp) {
 	const date = new Date(timestamp);
 	const dateStr = date.toLocaleString('ru-RU', options);
 	return dateStr.slice(0, 8) + dateStr.slice(9);
-}*/
+}
 
 // веб сокет
 function openWs() {
@@ -572,6 +590,7 @@ canvas.addEventListener('mousemove', e => {
   ctx.moveTo(curves[curves.length-2][0],curves[curves.length-2][1]);
   ctx.lineTo(curves[curves.length-1][0],curves[curves.length-1][1])
   ctx.stroke();
+  setInterval(tick, 1000);
 });
 
 //ресайз холста
@@ -589,7 +608,6 @@ function tick () {
   }
   window.requestAnimationFrame(tick);
 }
-setInterval(tick, 1000);
 
 //посылаем данные рисования на сервер
 var id = localStorage.getItem('fileId');
