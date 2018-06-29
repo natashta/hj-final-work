@@ -527,7 +527,7 @@ function openWs() {
 		}
 
 		if (JSON.parse(event.data).event === 'comment'){
-			getNewComments(JSON.parse(event.data).comment;(JSON.parse(event.data).comment;
+			getNewComments(JSON.parse(event.data).comment);
 			//получаем json с текстом и координатами. Надо проверить, есть ли форма с такими координатами
 			console.log('comm');		
 		}
@@ -544,10 +544,6 @@ function openWs() {
  Array.from(menu.querySelectorAll('.menu__color')).forEach(color => {
 	 	color.addEventListener('change', () => {
 	 	wrap.dataset.state = 'drawing';
-	 	/*if (document.querySelector('.mask')) {
-	 		hideEl(document.querySelector('.mask'));
-
-	 	}*/
 		currColor = document.querySelector('.draw-tools .menu__color:checked').value;
 		if (color.checked) {
 			return currColor;
