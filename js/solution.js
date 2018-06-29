@@ -190,7 +190,7 @@ function getInfo(id) {
 
 	getData = JSON.parse(xhrGet.responseText);
 	console.log(xhrGet.responseText);
-	//getNewComments(dataGet.comments);
+	getNewComments(getData.comments);
 }
 
 function onLoadImg() {
@@ -234,19 +234,6 @@ document.querySelector('.menu_copy').addEventListener('click', (event) => {
   }  
     window.getSelection().removeAllRanges(); 
 	});
-
-/*
-//Получить инфо о файле
-function getInfo(id) {
-	var xhrGet = new XMLHttpRequest();
-	xhrGet.open("GET", `${serverUrl}/${id}`, false);
-	xhrGet.send();
-
-	var data = JSON.parse(xhrGet.responseText);
-	console.log(data);
-	openWs();
-}
-*/
 
 canvas.addEventListener('click', () => {
 	if (menu.querySelector('.draw').dataset.state === 'selected') {
@@ -454,10 +441,31 @@ function addComment(message, form) {
 	form.querySelector('.comments__body').insertBefore(newMessageDiv, loaderDiv);
 }
 
-//добавление полученного комментария
+//добавляем полученные комментарии в форму. Событие comment - получаем json с текстом и координатами.
 //Надо проверить, есть ли форма с такими координатами. Если есть, вставить туда текст, если нет - создать форму и вставить текст
-function checkForm() {
+function getNewComments(newComment) {
+	if (!newComment) return;
+	Object.keys(newComment).forEach(id => {
+		//добавляем полученный коммент в существующую форму
+		Array.from(wrap.querySelectorAll('.comments__form')).forEach(form => {
+			if (form.dataset.left === newComments[id].left && form.dataset.top === newComments[id].top) {
+				form.querySelector('.loader').style.display = 'none';
+				addMessageComment(newComment[id], form); 
+			} else {
+				//создаем форму и добавляем коммент
+				newForm.dataset.left = newComment[id].left;
+				newForm.dataset.top = newComment[id].top;
+				newForm.style.left = newComment[id].left + 'px';
+				newForm.style.top = newComment[id].top + 'px';
+				wrap.insertBefore(newForm, canvas);
+				addComment(newComment[id], newForm);
 
+			if (commOff.checked) {
+				newForm.style.display = 'none';
+			}
+			}
+		});
+		});
 }
 
 function addComment() {
