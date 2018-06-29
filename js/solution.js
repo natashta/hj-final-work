@@ -527,7 +527,7 @@ function openWs() {
 		}
 
 		if (JSON.parse(event.data).event === 'comment'){
-			//addComment(JSON.parse(event.data).comment;
+			getNewComments(JSON.parse(event.data).comment;(JSON.parse(event.data).comment;
 			//получаем json с текстом и координатами. Надо проверить, есть ли форма с такими координатами
 			console.log('comm');		
 		}
