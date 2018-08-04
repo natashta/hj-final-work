@@ -11,7 +11,7 @@ const formComments = document.querySelectorAll('.comments__form');
 	loader = document.querySelector('.image-loader'),
 	canvas = document.querySelector('#canvas'),
 	ctx = canvas.getContext('2d'),
-	serverUrl = 'https://neto-api.herokuapp.com/pic',
+	serverUrl = 'https://neto-api.herokuapp.com/pic/',
 	socketUrl = 'wss://neto-api.herokuapp.com/pic/';
 
 	let ws;
@@ -466,10 +466,6 @@ function getNewComments(newComment) {
 			}
 		});
 		});
-}
-
-function addComment() {
-
 }
 
 // надо скрыть остальные формы при клике на маркер
