@@ -168,8 +168,7 @@ fetch(serverUrl, {
 			var url = res.url;
 			localStorage.setItem('fileId', id);
 			localStorage.setItem('fileUrl', url);
-			//getInfo(res.id);
-			onLoadImg()
+			onLoadImg();
 		})
 		.catch(er => {
 			console.log(er);
@@ -183,7 +182,7 @@ function getInfo(id) {
 	const xhrGet = new XMLHttpRequest();
 	xhrGet.open(
 		'GET',
-		`${serverUrl}/${id}`,
+		`${serverUrl}${id}`,
 		false
 	);
 	xhrGet.send();
@@ -209,6 +208,7 @@ if (currentImg.dataset.state === 'load') {
 	showEl(burger);
 	removeForms();
 	clearPaint();
+	getInfo(id);
 	openWs();
 }
 }
